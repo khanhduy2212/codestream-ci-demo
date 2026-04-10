@@ -1,0 +1,45 @@
+name: CodeStream CI Demo
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Show Python version
+        run: python --version
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run build step
+        run: |
+          python app.py
+
+      - name: Run unit test
+        run: |
+          pytest
+
+      - name: Create version file
+        run: |
+          echo "Version: demo-${GITHUB_SHA}" > version.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: codestream-version
+          path: version.txt

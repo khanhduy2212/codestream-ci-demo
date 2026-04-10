@@ -89,3 +89,22 @@ jobs:
           grep "Environment: Staging" response.html
 
           echo "Smoke test passed successfully."
+
+  deploy-production:
+    needs: smoke-test
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+
+    steps:
+      - name: Show production deployment info
+        run: |
+          echo "Starting controlled production deployment"
+          echo "Current commit: ${GITHUB_SHA}"
+          echo "Environment: production"
+
+      - name: Deploy Production
+        run: |
+          echo "Production deployment approved."
+          echo "Deploying to production..."
+          echo "Production deploy completed successfully."

@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -38,8 +43,29 @@ jobs:
         run: |
           echo "Version: demo-${GITHUB_SHA}" > version.txt
 
-      - name: Upload artifact
+      - name: Update staging version in HTML
+        run: |
+          sed -i "s/Version: demo-v1/Version: demo-${GITHUB_SHA}/" index.html
+
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: codestream-version
           path: version.txt
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy-staging:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy Staging
+        id: deployment
+        uses: actions/deploy-pages@v4

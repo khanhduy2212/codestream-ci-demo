@@ -66,3 +66,26 @@ jobs:
       - name: Deploy Staging
         id: deployment
         uses: actions/deploy-pages@v4
+
+  smoke-test:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run smoke test
+        run: |
+          URL="https://khanhduy2212.github.io/codestream-ci-demo/"
+          echo "Checking staging URL: $URL"
+
+          curl -L "$URL" -o response.html
+
+          echo "Checking if page contains expected title..."
+          grep "CodeStream - Staging Environment" response.html
+
+          echo "Checking if deploy status is success..."
+          grep "Deploy success" response.html
+
+          echo "Checking if environment is staging..."
+          grep "Environment: Staging" response.html
+
+          echo "Smoke test passed successfully."

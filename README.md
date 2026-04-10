@@ -1,2 +1,2 @@
 # codestream-ci-demo
-Demo CI for CodeStream
+Demo CI for CodeStream KTPMK22C

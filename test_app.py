@@ -10,7 +10,7 @@ def test_multiply():
     assert multiply(3, 5) == 15
 
 def test_format_result():
-    assert format_result("add", 2, 3, 5) == "add(2, 3) = 5",
+    assert format_result("add", 2, 3, 5) == "add(2, 3) = 5"
 
 def test_run_demo_returns_three_lines():
     outputs = run_demo()
